@@ -2,9 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,22 +14,15 @@ public class DataProcessor {
             List<Cell> cellList = readCSV(CSV_FILE);
             cleanAndTransformData(cellList);
 
-            // Example usage of additional methods
-            CellStatistics statistics = calculateStatistics(cellList);
-            System.out.println("Mean body weight: " + statistics.getMeanBodyWeight());
-            System.out.println("Median body weight: " + statistics.getMedianBodyWeight());
+            // Display statistics using the new methods in CellStatistics
+            System.out.println("Mean Body Weight: " + CellStatistics.getMeanBodyWeight(cellList));
+            System.out.println("Median Body Weight: " + CellStatistics.getMedianBodyWeight(cellList));
 
-            List<String> uniqueOems = listUniqueValues(cellList, "oem");
-            System.out.println("Unique OEMs: " + uniqueOems);
-
-            List<String> uniqueYears = listUniqueValues(cellList, "launch_announced");
-            System.out.println("Unique launch years: " + uniqueYears);
-
-            int phonesWithOneSensor = countPhonesWithOneSensor(cellList);
-            System.out.println("Number of phones with only one sensor: " + phonesWithOneSensor);
-
-            int yearWithMostLaunches = findYearWithMostLaunches(cellList);
-            System.out.println("Year with the most launches: " + yearWithMostLaunches);
+            // Example usage of additional methods (placeholders for your implementations)
+            System.out.println("Unique OEMs: " + listUniqueValues(cellList, "oem"));
+            System.out.println("Unique launch years: " + listUniqueValues(cellList, "launch_announced"));
+            System.out.println("Number of phones with only one sensor: " + countPhonesWithOneSensor(cellList));
+            System.out.println("Year with the most launches: " + findYearWithMostLaunches(cellList));
 
         } catch (IOException e) {
             System.err.println("Error reading CSV file: " + e.getMessage());
@@ -108,11 +99,6 @@ public class DataProcessor {
         return null; // Return null if no numeric data is found
     }
 
-    public static CellStatistics calculateStatistics(List<Cell> cellList) {
-        // Implement calculation logic here
-        return new CellStatistics(); // Placeholder
-    }
-
     public static List<String> listUniqueValues(List<Cell> cellList, String columnName) {
         List<String> uniqueValues = new ArrayList<>();
         for (Cell cell : cellList) {
@@ -127,79 +113,95 @@ public class DataProcessor {
     private static String getValueForColumn(Cell cell, String columnName) {
         switch (columnName) {
             case "oem":
-                return cell.getOem();
-            case "model":
-                return cell.getModel();
-            case "launch_announced":
-                return cell.getLaunchAnnounced();
-            default:
-                return null;
+            return cell.getOem();
+        case "model":
+            return cell.getModel();
+        case "launch_announced":
+            return cell.getLaunchAnnounced();
+        default:
+            return null;
+    }
+}
+
+public static int countPhonesWithOneSensor(List<Cell> cellList) {
+    int count = 0;
+    for (Cell cell : cellList) {
+        if (cell.getFeaturesSensors() != null && cell.getFeaturesSensors().split(",").length == 1) {
+            count++;
         }
     }
+    return count;
+}
 
-    public static int countPhonesWithOneSensor(List<Cell> cellList) {
+public static int findYearWithMostLaunches(List<Cell> cellList) {
+    HashMap<String, Integer> yearCounts = new HashMap<>();
+    for (Cell cell : cellList) {
+        String year = cell.getLaunchAnnounced();
+        yearCounts.put(year, yearCounts.getOrDefault(year, 0) + 1);
+    }
+    int maxCount = 0;
+    String yearWithMostLaunches = "";
+    for (Map.Entry<String, Integer> entry : yearCounts.entrySet()) {
+        if (entry.getValue() > maxCount) {
+            maxCount = entry.getValue();
+            yearWithMostLaunches = entry.getKey();
+        }
+    }
+    return yearWithMostLaunches.isEmpty() ? 0 : Integer.parseInt(yearWithMostLaunches);
+}
+
+static class CellStatistics {
+    public static double getMeanBodyWeight(List<Cell> cells) {
+        double sum = 0;
         int count = 0;
-        for (Cell cell : cellList) {
-            if (cell.getFeaturesSensors() != null && cell.getFeaturesSensors().split(",").length == 1) {
+        for (Cell cell : cells) {
+            if (cell.getBodyWeight() != null) {
+                sum += cell.getBodyWeight();
                 count++;
             }
         }
-        return count;
+        return count > 0 ? sum / count : 0;
     }
 
-    public static int findYearWithMostLaunches(List<Cell> cellList) {
-        Map<String, Integer> yearCounts = new HashMap<>();
-        for (Cell cell : cellList) {
-            String year = cell.getLaunchAnnounced();
-            yearCounts.put(year, yearCounts.getOrDefault(year, 0) + 1);
-        }
-        int maxCount = 0;
-        int yearWithMostLaunches = 0;
-        for (Map.Entry<String, Integer> entry : yearCounts.entrySet()) {
-            if (entry.getValue() > maxCount) {
-                maxCount = entry.getValue();
-                yearWithMostLaunches = Integer.parseInt(entry.getKey());
+    public static double getMedianBodyWeight(List<Cell> cells) {
+        List<Double> weights = new ArrayList<>();
+        for (Cell cell : cells) {
+            if (cell.getBodyWeight() != null) {
+                weights.add(cell.getBodyWeight());
             }
         }
-        return yearWithMostLaunches;
-    }
-
-    // Define Cell class
-    static class Cell {
-        private String oem;
-        private String model;
-        private String launchAnnounced;
-        private String launchStatus;
-        private String bodyWeight;
-        private String displaySize;
-        private String featuresSensors;
-
-        public Cell(String oem, String model, String launchAnnounced, String launchStatus, String bodyWeight, String displaySize, String featuresSensors) {
-            this.oem = oem;
-            this.model = model;
-            this.launchAnnounced = launchAnnounced;
-            this.launchStatus = launchStatus;
-            this.bodyWeight = bodyWeight;
-            this.displaySize = displaySize;
-            this.featuresSensors = featuresSensors;
+        if (weights.isEmpty()) {
+            return 0;
         }
-
-        // Getters and setters as needed
-    }
-
-    // Define CellStatistics class
-    static class CellStatistics {
-        // Define attributes and methods to calculate statistics
-
-        public double getMeanBodyWeight() {
-            // Placeholder for actual implementation
-            return 0.0;
-        }
-
-        public double getMedianBodyWeight() {
-            // Placeholder for actual implementation
-            return 0.0;
+        weights.sort(Double::compare);
+        int middle = weights.size() / 2;
+        if (weights.size() % 2 == 1) {
+            return weights.get(middle);
+        } else {
+            return (weights.get(middle - 1) + weights.get(middle)) / 2.0;
         }
     }
 }
 
+static class Cell {
+    private String oem;
+    private String model;
+    private String launchAnnounced;
+    private String launchStatus;
+    private String bodyWeight;
+    private String displaySize;
+    private String featuresSensors;
+
+    public Cell(String oem, String model, String launchAnnounced, String launchStatus, String bodyWeight, String displaySize, String featuresSensors) {
+        this.oem = oem;
+        this.model = model;
+        this.launchAnnounced = launchAnnounced;
+        this.launchStatus = launchStatus;
+        this.bodyWeight = bodyWeight;
+        this.displaySize = displaySize;
+        this.featuresSensors = featuresSensors;
+    }
+
+    // Getters and possibly setters as needed
+}
+}
