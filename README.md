@@ -26,4 +26,4 @@ Answer the following questions (and provide a corresponding screen showing outpu
 1. What company (oem) has the highest average weight of the phone body?
 2. Was there any phones that were announced in one year and released in another? What are they? Give me the oem and models.
 3. How many phones have only one feature sensor?
-4. What year had the most phones launched in any year later than 1999? 
+4. What year had the most phones launched in any year later than 1999? n/a
