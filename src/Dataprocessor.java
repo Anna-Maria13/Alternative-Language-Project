@@ -126,14 +126,13 @@ public class DataProcessor {
 
     // Define Cell class
     static class Cell {
-        // Define attributes and constructor
-    }
-
-    // Define CellStatistic class
-    static class CellStatistics {
-        // Define attributes and methods to calculate statistics
-    }
-}
-
+        private String oem;
+        private String model;
+        private String launchAnnounced;
+        private String launchStatus;
+        private String bodyDimensions;
+        private String bodyWeight;
+        private String bodySim;
+        private String displayType;
 
 
