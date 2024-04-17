@@ -129,7 +129,7 @@ public class DataProcessor {
         // Define attributes and constructor
     }
 
-    // Define CellStatistics class
+    // Define CellStatistic class
     static class CellStatistics {
         // Define attributes and methods to calculate statistics
     }
