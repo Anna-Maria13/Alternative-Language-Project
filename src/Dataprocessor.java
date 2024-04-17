@@ -2,35 +2,44 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataProcessor {
+    private static final String CSV_FILE = "cells.csv";
 
     public static void main(String[] args) {
-        List<Cell> cellList = readCSV("cells.csv");
-        cleanAndTransformData(cellList);
-        // Additional processing or output here
-
-        // Example usage of additional methods
-        CellStatistics statistics = calculateStatistics(cellList);
-        System.out.println("Mean body weight: " + statistics.getMeanBodyWeight());
-        System.out.println("Median body weight: " + statistics.getMedianBodyWeight());
-
-        List<String> uniqueValues = listUniqueValues(cellList, "oem");
-        System.out.println("Unique OEMs: " + uniqueValues);
-
-        // Example usage of exception handling
         try {
-            List<Cell> emptyList = readCSV("empty_file.csv");
+            List<Cell> cellList = readCSV(CSV_FILE);
+            cleanAndTransformData(cellList);
+
+            // Example usage of additional methods
+            CellStatistics statistics = calculateStatistics(cellList);
+            System.out.println("Mean body weight: " + statistics.getMeanBodyWeight());
+            System.out.println("Median body weight: " + statistics.getMedianBodyWeight());
+
+            List<String> uniqueOems = listUniqueValues(cellList, "oem");
+            System.out.println("Unique OEMs: " + uniqueOems);
+
+            List<String> uniqueYears = listUniqueValues(cellList, "launch_announced");
+            System.out.println("Unique launch years: " + uniqueYears);
+
+            int phonesWithOneSensor = countPhonesWithOneSensor(cellList);
+            System.out.println("Number of phones with only one sensor: " + phonesWithOneSensor);
+
+            int yearWithMostLaunches = findYearWithMostLaunches(cellList);
+            System.out.println("Year with the most launches: " + yearWithMostLaunches);
+
         } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+            System.err.println("Error reading CSV file: " + e.getMessage());
         }
     }
 
     // Step 1: Read the CSV file with exception handling for input validation
-    private static List<Cell> readCSV(String filename) throws IOException {
+    public static List<Cell> readCSV(String filename) throws IOException {
         List<Cell> cellList = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String line;
@@ -47,7 +56,7 @@ public class DataProcessor {
     }
 
     // Step 2: Perform data cleaning and transformation
-    private static void cleanAndTransformData(List<Cell> cellList) {
+    public static void cleanAndTransformData(List<Cell> cellList) {
         for (Cell cell : cellList) {
             // Clean and transform attributes as needed
             cell.setLaunchAnnounced(transformToYear(cell.getLaunchAnnounced()));
@@ -92,14 +101,13 @@ public class DataProcessor {
     }
 
     // Additional method to calculate statistics on cell attributes
-    private static CellStatistics calculateStatistics(List<Cell> cellList) {
+    public static CellStatistics calculateStatistics(List<Cell> cellList) {
         // Implement calculation logic here
         return new CellStatistics(); // Placeholder, replace with actual implementation
     }
 
     // Additional method to list unique values for a specific column
-    private static List<String> listUniqueValues(List<Cell> cellList, String columnName) {
-        // Implement logic to extract unique values from the specified column
+    public static List<String> listUniqueValues(List<Cell> cellList, String columnName) {
         List<String> uniqueValues = new ArrayList<>();
         for (Cell cell : cellList) {
             String value = getValueForColumn(cell, columnName);
@@ -112,50 +120,100 @@ public class DataProcessor {
 
     // Additional method to get the value of a specific column for a cell
     private static String getValueForColumn(Cell cell, String columnName) {
-        // Implement logic to get the value of the specified column from the cell
         switch (columnName) {
             case "oem":
                 return cell.getOem();
             case "model":
                 return cell.getModel();
+            case "launch_announced":
+                return cell.getLaunchAnnounced();
             // Add cases for other columns as needed
             default:
                 return null;
         }
     }
 
-   // Define Cell class
-   static class Cell {
-    private String oem;
-    private String model;
-    private String launchAnnounced;
-    private String launchStatus;
-    private String bodyDimensions;
-    private String bodyWeight;
-    private String bodySim;
-    private String displayType;
-    private String displaySize;
-    private String displayResolution;
-    private String featuresSensors;
-    private String platformOs;
-
-    // Constructor
-    public Cell(String oem, String model, String launchAnnounced, String launchStatus,
-                String bodyDimensions, String bodyWeight, String bodySim, String displayType,
-                String displaySize, String displayResolution, String featuresSensors, String platformOs) {
-        this.oem = oem;
-        this.model = model;
-        this.launchAnnounced = launchAnnounced;
-        this.launchStatus = launchStatus;
-        this.bodyDimensions = bodyDimensions;
-        this.bodyWeight = bodyWeight;
-        this.bodySim = bodySim;
-        this.displayType = displayType;
-        this.displaySize = displaySize;
-        this.displayResolution = displayResolution;
-        this.featuresSensors = featuresSensors;
-        this.platformOs = platformOs;
+    // Additional method to count phones with only one feature sensor
+    public static int countPhonesWithOneSensor(List<Cell> cellList) {
+        int count = 0;
+        for (Cell cell : cellList) {
+            if (cell.getFeaturesSensors() != null && cell.getFeaturesSensors().split(",").length == 1) {
+                count++;
+            }
+        }
+        return count;
     }
 
-    //Getters and
+    // Additional method to find the year with the most launches
+    public static int findYearWithMostLaunches(List<Cell> cellList) {
+        Map<String, Integer> yearCounts = new HashMap<>();
+        for (Cell cell : cellList) {
+            String year = cell.getLaunchAnnounced();
+            yearCounts.put(year, yearCounts.getOrDefault(year, 0) + 1);
+        }
+        int maxCount = 0;
+        int yearWithMostLaunches = 0;
+        for (Map.Entry<String, Integer> entry : yearCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                yearWithMostLaunches = Integer.parseInt(entry.getKey());
+            }
+        }
+        return yearWithMostLaunches;
+    }
+
+    // Define Cell class
+    static class Cell {
+        private String oem;
+        private String model;
+        private String launchAnnounced;
+        private String launchStatus;
+        private String bodyWeight;
+        private String displaySize;
+        private String featuresSensors;
+
+        public Cell(String oem, String model, String launchAnnounced, String launchStatus, String bodyWeight, String displaySize, String featuresSensors) {
+            this.oem = oem;
+            this.model = model;
+            this.launchAnnounced = launchAnnounced;
+            this.launchStatus = launchStatus;
+            this.bodyWeight = bodyWeight;
+            this.displaySize = displaySize;
+            this.featuresSensors = featuresSensors;
+        }
+
+        public String getOem() {
+            return oem;
+        }
+
+        public String getModel() {
+            return model;
+        }
+
+        public String getLaunchAnnounced() {
+            return launchAnnounced;
+        }
+
+        public String getLaunchStatus() {
+            return launchStatus;
+        }
+
+        public String getBodyWeight() {
+            return bodyWeight;
+        }
+
+        public String getDisplaySize() {
+            return displaySize;
+        }
+
+        public String getFeaturesSensors() {
+            return featuresSensors;
+        }
+    }
+
+    // Define CellStatistics class (if needed)
+    static class CellStatistics {
+        // Define attributes and methods to calculate statistics
+    }
+} 
 
