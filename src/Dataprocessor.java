@@ -19,6 +19,9 @@ public class DataProcessor {
             System.out.println("Mean Body Weight: " + CellStatistics.getMeanBodyWeight(cellList));
             System.out.println("Median Body Weight: " + CellStatistics.getMedianBodyWeight(cellList));
 
+            System.out.println("Mean Display Size: " + CellStatistics.getMeanDisplaySize(cellList));
+            System.out.println("Median Display Size: " + CellStatistics.getMedianDisplaySize(cellList));
+
             System.out.println("Unique OEMs: " + listUniqueValues(cellList, "oem"));
             System.out.println("Unique launch years: " + listUniqueValues(cellList, "launch_announced"));
             System.out.println("Number of phones with only one sensor: " + countPhonesWithOneSensor(cellList));
@@ -168,7 +171,28 @@ public class DataProcessor {
             }
         }
     }
+    public static double getMeanDisplaySize(List<Cell> cells) {
+        double sum = 0;
+        for (Cell cell : cells) {
+            sum += cell.getDisplaySize();
+        }
+        return cells.size() > 0 ? sum / cells.size() : 0;
+    }
 
+    public static double getMedianDisplaySize(List<Cell> cells) {
+        List<Float> sizes = new ArrayList<>();
+        for (Cell cell : cells) {
+            sizes.add(cell.getDisplaySize());
+        }
+        sizes.sort(Float::compare);
+        int middle = sizes.size() / 2;
+        if (sizes.size() % 2 == 1) {
+            return sizes.get(middle);
+        } else {
+            return (sizes.get(middle - 1) + sizes.get(middle)) / 2.0;
+        }
+    }
+}
     static class Cell {
         private String oem;
         private String model;
