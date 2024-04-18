@@ -40,11 +40,11 @@ public class DataProcessor {
                     continue;
                 }
                 String[] parts = line.split(",");
-                if (parts.length != 7) {  // Adjust the number based on your CSV structure
+                if (parts.length != 10) {  // Adjust the number based on your CSV structure
                     System.out.println("Skipping invalid line: " + line);
                     continue;
                 }
-                Cell cell = new Cell(parts[0], parts[1], parts[2], parts[3], Float.parseFloat(parts[4]), Float.parseFloat(parts[5]), parts[6]);
+                Cell cell = new Cell(parts[0], parts[1], parts[2], parts[3], parts[4], parts[5], parts[6], parts[7], parts[8], parts[9]);
                 cellList.add(cell);
             }
         }
@@ -55,8 +55,8 @@ public class DataProcessor {
         for (Cell cell : cellList) {
             cell.setLaunchAnnounced(transformToYear(cell.getLaunchAnnounced()));
             cell.setLaunchStatus(transformToYearOrStatus(cell.getLaunchStatus()));
-            cell.setBodyWeight(Float.parseFloat(transformToFloat(String.valueOf(cell.getBodyWeight()))));
-            cell.setDisplaySize(Float.parseFloat(transformToFloat(String.valueOf(cell.getDisplaySize()))));
+            cell.setBodyWeight(Float.parseFloat(transformToFloat(cell.getBodyWeight())));
+            cell.setDisplaySize(Float.parseFloat(transformToFloat(cell.getDisplaySize())));
         }
     }
 
@@ -174,18 +174,24 @@ public class DataProcessor {
         private String model;
         private String launchAnnounced;
         private String launchStatus;
-        private float bodyWeight;
-        private float displaySize;
-        private String featuresSensors;
+        private String bodyDimensions;
+        private String bodyWeight;
+        private String bodySim;
+        private String displayType;
+        private String displaySize;
+        private String displayResolution;
 
-        public Cell(String oem, String model, String launchAnnounced, String launchStatus, float bodyWeight, float displaySize, String featuresSensors) {
+        public Cell(String oem, String model, String launchAnnounced, String launchStatus, String bodyDimensions, String bodyWeight, String bodySim, String displayType, String displaySize, String displayResolution) {
             this.oem = oem;
             this.model = model;
             this.launchAnnounced = launchAnnounced;
             this.launchStatus = launchStatus;
+            this.bodyDimensions = bodyDimensions;
             this.bodyWeight = bodyWeight;
+            this.bodySim = bodySim;
+            this.displayType = displayType;
             this.displaySize = displaySize;
-            this.featuresSensors = featuresSensors;
+            this.displayResolution = displayResolution;
         }
 
         // Getters and setters
@@ -193,14 +199,15 @@ public class DataProcessor {
         public String getModel() { return model; }
         public String getLaunchAnnounced() { return launchAnnounced; }
         public String getLaunchStatus() { return launchStatus; }
-        public float getBodyWeight() { return bodyWeight; }
-        public float getDisplaySize() { return displaySize; }
+        public String getBodyWeight() { return bodyWeight; }
+        public String getDisplaySize() { return displaySize; }
         public String getFeaturesSensors() { return featuresSensors; }
 
         public void setLaunchAnnounced(String launchAnnounced) { this.launchAnnounced = launchAnnounced; }
         public void setLaunchStatus(String launchStatus) { this.launchStatus = launchStatus; }
-        public void setBodyWeight(float bodyWeight) { this.bodyWeight = bodyWeight; }
-        public void setDisplaySize(float displaySize) { this.displaySize = displaySize; }
+        public void setBodyWeight(String bodyWeight) { this.bodyWeight = bodyWeight; }
+        public void setDisplaySize(String displaySize) { this.displaySize = displaySize; }
     }
 }
+
 
