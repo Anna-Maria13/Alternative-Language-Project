@@ -166,6 +166,24 @@ public class DataProcessor {
         }
         return yearWithMostLaunches.isEmpty() ? 0 : Integer.parseInt(yearWithMostLaunches);
     }
+    
+
+    public static int findYearWithMostLaunches(List<Cell> cellList) {
+        HashMap<String, Integer> yearCounts = new HashMap<>();
+        for (Cell cell : cellList) {
+            String year = cell.getLaunchAnnounced();
+            yearCounts.put(year, yearCounts.getOrDefault(year, 0) + 1);
+        }
+        int maxCount = 0;
+        String yearWithMostLaunches = "";
+        for (Map.Entry<String, Integer> entry : yearCounts.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                yearWithMostLaunches = entry.getKey();
+            }
+        }
+        return yearWithMostLaunches.isEmpty() ? 0 : Integer.parseInt(yearWithMostLaunches);
+    }
 
     static class CellStatistics {
         public static double getMeanBodyWeight(List<Cell> cells) {
