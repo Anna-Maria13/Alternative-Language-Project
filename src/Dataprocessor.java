@@ -106,7 +106,27 @@ public class DataProcessor {
         }
         return uniqueValues;
     }
+    public static List<String> listUniqueDisplayTypes(List<Cell> cellList) {
+        List<String> uniqueTypes = new ArrayList<>();
+        for (Cell cell : cellList) {
+            String type = cell.getDisplayType();
+            if (type != null && !uniqueTypes.contains(type)) {
+                uniqueTypes.add(type);
+            }
+        }
+        return uniqueTypes;
+    }
 
+    public static List<String> listUniqueDisplayResolutions(List<Cell> cellList) {
+        List<String> uniqueResolutions = new ArrayList<>();
+        for (Cell cell : cellList) {
+            String resolution = cell.getDisplayResolution();
+            if (resolution != null && !uniqueResolutions.contains(resolution)) {
+                uniqueResolutions.add(resolution);
+            }
+        }
+        return uniqueResolutions;
+    }
     private static String getValueForColumn(Cell cell, String columnName) {
         switch (columnName) {
             case "oem":
