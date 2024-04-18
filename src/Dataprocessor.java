@@ -15,22 +15,23 @@ public class DataProcessor {
         try {
             List<Cell> cellList = readCSV(CSV_FILE);
             cleanAndTransformData(cellList);
-
+    
             System.out.println("Mean Body Weight: " + CellStatistics.getMeanBodyWeight(cellList));
             System.out.println("Median Body Weight: " + CellStatistics.getMedianBodyWeight(cellList));
-
+    
             System.out.println("Mean Display Size: " + CellStatistics.getMeanDisplaySize(cellList));
             System.out.println("Median Display Size: " + CellStatistics.getMedianDisplaySize(cellList));
-
+    
             System.out.println("Unique OEMs: " + listUniqueValues(cellList, "oem"));
             System.out.println("Unique launch years: " + listUniqueValues(cellList, "launch_announced"));
             System.out.println("Number of phones with only one sensor: " + countPhonesWithOneSensor(cellList));
             System.out.println("Year with the most launches: " + findYearWithMostLaunches(cellList));
-
+    
         } catch (IOException e) {
             System.err.println("Error reading CSV file: " + e.getMessage());
         }
     }
+    
 
     public static List<Cell> readCSV(String filename) throws IOException {
         List<Cell> cellList = new ArrayList<>();
