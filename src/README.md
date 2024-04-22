@@ -18,12 +18,14 @@ How Java Handles Various Programming Concepts:
 8. Exception Handling: Exception handling in Java, using try, catch, and finally blocks, enables the handling of errors and exceptional conditions during program execution, enhancing program reliability and robustness.
 
 Libraries Used:
-1. JUnit: JUnit is a widely used unit testing framework for Java. It is used in this project for writing and executing unit tests to validate the functionality of methods in the DataProcessor class(used in DataprocessorTest.java file).
-2. Pattern and Matcher (java.util.regex): These classes are used in the DataProcessor class for data transformation tasks, specifically in methods like transformToYear, transformToYearOrStatus, and transformToFloat. They enable pattern matching and text manipulation, which are crucial for extracting specific information from the input data.
-3. The BufferedReader class is indeed used in the DataProcessor class to read data from a CSV file (readCSV method). It helps efficiently read text from the input stream, enhancing the performance of file ingestion in the program.
+1. java.util.regex - This library provides classes for pattern matching via regular expressions. It was used to parse and validate text during data cleaning processes.
+2. java.util - Includes collections frameworks, legacy collection classes, event model, date and time facilities, and miscellaneous utility classes. This library supported data structures like HashMap and ArrayList used for storing and manipulating data.
+3. java.io - Provides for system input and output through data streams, serialization, and the file system. It was essential for reading data from the CSV file.
+
 
 Answer the following questions (and provide a corresponding screen showing output answering them):
 1. What company (oem) has the highest average weight of the phone body?
+
 2. Was there any phones that were announced in one year and released in another? What are they? Give me the oem and models.
 3. How many phones have only one feature sensor?
 4. What year had the most phones launched in any year later than 1999?
