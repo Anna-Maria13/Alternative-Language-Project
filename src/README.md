@@ -25,7 +25,14 @@ Libraries Used:
 
 Answer the following questions (and provide a corresponding screen showing output answering them):
 1. What company (oem) has the highest average weight of the phone body?
+<img width="516" alt="Screen Shot 2024-04-21 at 11 13 57 PM" src="https://github.com/Anna-Maria13/Alternative-Language-Project/assets/143349381/52a74290-eb88-4de5-b877-3e3cfe81870d">
 
 2. Was there any phones that were announced in one year and released in another? What are they? Give me the oem and models.
+<img width="782" alt="Screen Shot 2024-04-21 at 11 12 47 PM" src="https://github.com/Anna-Maria13/Alternative-Language-Project/assets/143349381/6d2d5709-58a9-48af-9ba9-dc952265ed21">
+   
 3. How many phones have only one feature sensor?
+<img width="778" alt="Screen Shot 2024-04-21 at 11 13 13 PM" src="https://github.com/Anna-Maria13/Alternative-Language-Project/assets/143349381/2c2a72d6-8744-433c-a9db-18c16ac93b98">
+   
 4. What year had the most phones launched in any year later than 1999?
+   <img width="705" alt="Screen Shot 2024-04-21 at 11 13 32 PM" src="https://github.com/Anna-Maria13/Alternative-Language-Project/assets/143349381/9f9ff46b-0eef-4492-acde-32b8598f8856">
+
